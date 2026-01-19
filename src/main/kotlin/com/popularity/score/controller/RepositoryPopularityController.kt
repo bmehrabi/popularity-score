@@ -1,7 +1,7 @@
 package com.popularity.score.controller
 
-import com.popularity.score.client.GitHubSearchClient
 import com.popularity.score.dto.GitHubRepoItem
+import com.popularity.score.service.RepositoryPopularityService
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,7 +12,7 @@ import java.time.LocalDate
 @RestController
 @RequestMapping("/api/v1/repositories")
 class RepositoryPopularityController(
-    private val gitHubSearchClient: GitHubSearchClient
+    private val repositoryPopularityService: RepositoryPopularityService
 ) {
 
     @GetMapping
@@ -26,5 +26,5 @@ class RepositoryPopularityController(
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "30") size: Int
     ): List<GitHubRepoItem> =
-        gitHubSearchClient.search(createdAfter, language, page, size)
+        repositoryPopularityService.getPopularRepositories(createdAfter, language, page, size)
 }

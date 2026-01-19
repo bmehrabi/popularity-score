@@ -9,5 +9,6 @@ data class GitHubRepoItem (
     val forks_count: Int,
     val updated_at: Instant,
     val created_at: Instant,
-    val language: String?
+    val language: String?,
+    var popularityScore: Double = 0.0,
 )

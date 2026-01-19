@@ -1,9 +1,9 @@
 package com.popularity.score.controller
 
 import com.ninjasquad.springmockk.MockkBean
-import com.popularity.score.client.GitHubSearchClient
 import com.popularity.score.dto.GitHubOwner
 import com.popularity.score.dto.GitHubRepoItem
+import com.popularity.score.service.RepositoryPopularityService
 import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
@@ -23,7 +23,7 @@ class RepositoryPopularityControllerTest {
     lateinit var mockMvc: MockMvc
 
     @MockkBean
-    lateinit var client: GitHubSearchClient
+    lateinit var repositoryPopularityService: RepositoryPopularityService
 
     private val testItems = listOf(
         GitHubRepoItem(
@@ -39,7 +39,12 @@ class RepositoryPopularityControllerTest {
 
     @BeforeEach
     fun setup() {
-        every { client.search(LocalDate.of(2022,1,1), "Kotlin", 1, 30) } returns testItems
+        every { repositoryPopularityService.getPopularRepositories(
+            LocalDate.of(2022,1,1),
+            "Kotlin",
+            1,
+            30)
+        } returns testItems
     }
 
     @Test
@@ -57,7 +62,9 @@ class RepositoryPopularityControllerTest {
             jsonPath("$[0].owner.login") { value("user1") }
         }
 
-        // Verify that the controller called the client correctly
-        verify { client.search(LocalDate.of(2022,1,1), "Kotlin", 1, 30) }
+        // Verify that the controller called the service correctly
+        verify { repositoryPopularityService.getPopularRepositories(
+            LocalDate.of(2022,1,1), "Kotlin", 1, 30)
+        }
     }
 }
